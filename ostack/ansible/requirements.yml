@@ -4,17 +4,3 @@
   src: git+https://github.com/evandam/evandam.conda.git
   version: master  
 
-- name: udondan.ssh-reconnect
-  scm: git
-  src: git+https://github.com/udondan/ansible-role-ssh-reconnect.git
-  version: master  
-
-- name: yuriyguts.jupyter
-  scm: git
-  src: git+https://github.com/YuriyGuts/ansible-role-jupyter.git
-  version: master
-
-- name: geerlingguy.pip
-  scm: git
-  src: https://github.com/geerlingguy/ansible-role-pip.git
-  version: master

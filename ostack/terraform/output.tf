@@ -2,7 +2,12 @@ output "external_ip" {
   value = "${openstack_networking_floatingip_v2.floatingip.address}"
 }
 
-output "ssh_user" {
-  value = "${var.ssh_user}"
+
+output "jupyter_url" {
+  value = "https://${openstack_networking_floatingip_v2.floatingip.address}:${var.jupyter_port}"
 }
 
+
+output "jupyter_password" {
+  value = "${var.jupyter_password}"
+}

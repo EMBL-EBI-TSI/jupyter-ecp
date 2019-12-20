@@ -1,6 +1,6 @@
 #### Deployment ####
 variable "name" {
-  default     = "nfs-client"
+  default     = "Jupyter Instance"
   description = "The name of the deployment"
 }
 
@@ -16,12 +16,12 @@ variable "deployment_path" {
 
 #### OpenStack ####
 variable "disk_image_name" {
-  default     = "ubuntu-18.04"
+  default     = "ubuntu-18.04-python"
   description = "OS image name to use for installation"
 }
 
 variable "machine_type" {
-  default     = "s1.tiny"
+  default     = "s1.small"
   description = "Machine type (flavor)"
 }
 
@@ -32,6 +32,18 @@ variable "floating_ip_pool" {
 variable "network_name" {
   description = "The name of the OpenStack network where to deploy the instance"
 }
+
+variable "jupyter_port" {
+  default     = "8443"
+  description = "The Port number of Jupyter server instance to access from browser."
+}
+
+
+variable "jupyter_password" {
+  default     = "jupytersecret"
+  description = "The password to access jupyter server"
+}
+
 
 #### SSH ####
 variable "public_key_path" {
@@ -51,11 +63,6 @@ variable "ssh_key" {
   type        = "string"
 }
 
-variable "ssh_user" {
-  default     = "ubuntu"
-  description = "SSH user to login to VM"
-  type        = "string"
-}
 
 variable "user_private_key_path" {
   description = "The path of the private SSH key connected to the public SSH key to be injected in the vm. This key will be not used by terraform or ansible, but the path will used only to build a personalised ssh.config file. If not set up, it will assume the key is located in ~/.ssh/id_rsa"

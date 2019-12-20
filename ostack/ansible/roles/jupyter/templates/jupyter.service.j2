@@ -6,9 +6,10 @@ Type=simple
 PIDFile={{ jupyter_daemon_pidfile }}
 ExecStart={{ jupyter_daemon_executable }} --config={{ jupyter_config_filename }} 
 Group={{ jupyter_daemon_group }}
+User={{ jupyter_daemon_user }}
 WorkingDirectory={{ jupyter_daemon_document_root }}
 Restart=always
-RestartSec=10
+RestartSec=30
 
 [Install]
 WantedBy=multi-user.target

@@ -22,14 +22,14 @@ resource "openstack_compute_secgroup_v2" "allow-ssh" {
   }
 }
 
-resource "openstack_compute_secgroup_v2" "allow-https" {
-  name        = "${var.name}-allow-https"
-  description = "Allow HTTPS traffic"
+resource "openstack_compute_secgroup_v2" "allow-jupyter" {
+  name        = "${var.name}-allow-jupyter"
+  description = "Allow HTTPS traffic for Jupyter server"
 
   rule {
     ip_protocol = "tcp"
-    from_port   = 443
-    to_port     = 443
+    from_port   = 8443
+    to_port     = 8443
     cidr        = "0.0.0.0/0"
   }
 }

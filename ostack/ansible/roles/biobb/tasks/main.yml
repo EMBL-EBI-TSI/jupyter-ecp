@@ -1,0 +1,43 @@
+- name: Update conda
+  conda:
+    name: conda
+    state: latest
+    executable: '{{ ansible_env.HOME }}/miniconda3/bin/conda'
+
+- name: Create a conda environment - biobb
+  conda:
+    name: python
+    version: 3.6
+    environment: biobb
+    state: present
+    executable: '{{ ansible_env.HOME }}/miniconda3/bin/conda'
+
+- name: Install biobb packages in the environment
+  conda:
+    environment: biobb
+    name:
+      - biobb_io=0.1.4
+      - biobb_model=0.1.8
+      - biobb_md=0.1.5
+      - nglview=1.2.0
+      - simpletraj
+      - gromacs
+    executable: '{{ ansible_env.HOME }}/miniconda3/bin/conda'
+    channels:
+      - conda-forge
+      - bioconda
+
+- name: Activate biobb environment
+  shell: bash -ilc 'conda activate biobb;conda install pocl;jupyter-nbextension enable nglview --py --sys-prefix'
+
+- name: Download bioexcel github
+  git: >
+      repo=https://github.com/bioexcel/biobb_workflows.git
+      dest="{{ ansible_env.HOME }}/bioexcel"
+
+- name: Add line to bash_profile to activate biobb environment
+  lineinfile:
+    path: '{{ ansible_env.HOME }}/.profile'
+    state: present
+    line: 'conda activate biobb'
+

@@ -1,87 +1,24 @@
-- name: Install Conda
-  block:
-    - name: Make sure the user key is authorized on the nfs-server instance
-      become: yes
-      authorized_key: user="{{lookup('env','ANSIBLE_REMOTE_USER')}}" key="{{lookup('env','ssh_key')}}" exclusive=no state=present
+- name: Download Miniconda
+  get_url:
+    url: https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    dest: "{{ ansible_env.HOME }}/install-miniconda.sh"
+    checksum: sha256:bfe34e1fa28d6d75a7ad05fd02fa5472275673d5f5621b77380898dee1be15d2
+    mode: 0750
 
-    - name: Update and upgrade apt packages
-      become: true
-      apt:
-       upgrade: yes
-       update_cache: yes
-    - name: Download Miniconda
-      get_url:
-        url: https://repo.continuum.io/miniconda/Miniconda3-4.7.12-Linux-x86_64.sh
-        dest: /tmp/install-miniconda.sh
-        checksum: md5:0dba759b8ecfc8948f626fa18785e3d8
-        mode: 0550
-    - name: Create conda folder
-      become: yes
-      file:
-        path: /opt/miniconda3
-        state: directory
-        owner: ubuntu
-        mode: 755
-        recurse: yes
-    - name: Run the installer
-      shell: /tmp/install-miniconda.sh -b -u -p /opt/miniconda3
-    - name: Wait until the file /opt/miniconda3/bin is present before continuing
-      become: yes
-      wait_for:
-      path: /opt/miniconda3/bin  
-    - name: Remove the installer
-      file:
-        state: absent
-        path: /tmp/install-miniconda.sh
-    - name: conda - read permission for all
-      become: yes
-      file:
-        path: /opt/miniconda3
-        mode: +r
-        recurse: yes
-    - name: conda - execution permission for all
-      become: yes
-      file:
-        path: /opt/miniconda3/bin
-        mode: +x
-        recurse: yes  
-    - name: conda - execution permission for all
-      become: yes
-      file:
-       path: /opt/miniconda3/etc
-       mode: +rwx
-       recurse: yes   
-       
-    - name: Create symbolic link
-      become: yes
-      shell: ln -s  /opt/miniconda3/bin/conda /usr/bin/conda
-      
-    - name: Create symbolic link
-      become: yes
-      shell: ln -s  /opt/miniconda3/bin/activate /usr/bin/activate
-   
-    - name: Add conda config to bashrc
-      become: yes
-      shell: echo ' 127.0.0.1 {{lookup('env','TF_VAR_name')}} ' >> /etc/hosts
-    
-    - name: Add
-      become: yes
-      shell: echo ' echo \"hello\" ' >> /home/{{lookup('env','ANSIBLE_REMOTE_USER')}}/.bashrc
-      
-    - name: Source .bashrc
-      become: yes
-      command: bash -i /home/{{lookup('env','ANSIBLE_REMOTE_USER')}}/.bashrc
-      
-    - name: Conda add channels
-      become: yes
-      shell: conda config --add channels defaults; conda config --add channels bioconda;conda config --add channels conda-forge
-   
-    - name: Conda install python
-      become: yes
-      shell: conda install python=3.6
-      
-    - name: Install pip 
-      become: yes 
-      apt:
-        name: ['python3-pip']
-        state: present
+- name: Run the installer
+  shell: "{{ ansible_env.HOME }}/install-miniconda.sh -b -u -p {{ ansible_env.HOME }}/miniconda3"
+
+- name: Remove the installer
+  file:
+    state: absent
+    path: '{{ ansible_env.HOME }}/install-miniconda.sh'
+
+- name: Add line to bash_profile to activate virtual environment
+  lineinfile:
+    path: '{{ ansible_env.HOME }}/.profile'
+    state: present
+    line: 'source ~/miniconda3/bin/activate'
+
+- name: Conda add channels
+  shell: bash -ilc 'conda config --add channels defaults; conda config --add channels bioconda;conda config --add channels conda-forge'
+

@@ -1,51 +1,35 @@
 ---
-- name: Warming up to be jupyter instance
+- name: Warming up jupyter instance
   gather_facts: no
   hosts: instance_public_ip
-  vars_prompt:
-   - name: jpassword
-     prompt: "What is your notebook password?"
-     private: no   
   tasks:
-  - include_role:
-      name: 'evandam.conda'
-  - include_role:
-      name: 'udondan.ssh-reconnect' 
-  - name: Initial connection block
-    block:
-      - name: Wait 1 minutes, but only start checking after 10 seconds
-        wait_for_connection:
-          delay: 10
-          timeout: 60
-    rescue:
-      - name: Try to install python 3, when ansible is not able to connect
-        raw: test -e /usr/bin/python || (apt -y update && apt install -y python3.7)
+    - name: Initial connection block
+      block:
+        - name: Wait 30 seconds, but only start checking after 5 seconds
+          wait_for_connection:
+            delay: 5
+            timeout: 30
+      rescue:
+        - name: Try to install python 2, when ansible is not able to connect
+          raw: test -e /usr/bin/python || (apt -y update && apt install -y python)
+      become: yes  
 
-- name: Set up conda
+
+- name: Setting up Conda & Jupyter environment
   hosts: instance_public_ip
+  vars:
+     jupyter_plaintext_password: "{{ lookup('env','JUPYTER_PASSWORD') }}"
+     ansible_user: "{{lookup('env','ANSIBLE_REMOTE_USER')}}"
   become: yes
+  become_user: "{{lookup('env','ANSIBLE_REMOTE_USER')}}"
   roles:
-    - udondan.ssh-reconnect
     - conda
-    - evandam.conda
-    - conda-packages
-    - geerlingguy.pip
+    - role: evandam.conda
+    - biobb
     - role: jupyter
-      jupyter_ip: '0.0.0.0'
-      jupyter_port: 443
-      jupyter_plaintext_password: jupytersecret
-      jupyter_daemon_document_root: /opt/bioexcel
-      jupyter_package_manager_become: yes
-      jupyter_daemon_enable: yes
-      jupyter_config_filename: /home/ubuntu/.jupyter/jupyter_notebook_config.py
-      machine_name:  "{{lookup('env','TF_VAR_name')}}"
-      jupyter_certfile: /opt/openssl/mycert.pem
-      jupyter_keyfile: /opt/openssl/mykey.key
-      jupyter_daemon_user: "{{lookup('env','ANSIBLE_REMOTE_USER')}}"
-      jupyter_daemon_group: "{{lookup('env','ANSIBLE_REMOTE_USER')}}"
 
   tasks:
-    - name: Make sure the user key is authorized on the nfs-server instance
+    - name: Make sure the user key is authorized on the Jupyter server instance
       become: yes
       authorized_key: user="{{lookup('env','ANSIBLE_REMOTE_USER')}}" key="{{lookup('env','ssh_key')}}" exclusive=no state=present
 
