@@ -1,5 +1,5 @@
 {
-    "applicationName": "Cloud Portal Application - Jupyter",
+    "applicationName": "Jupyter Server Instance",
     "contactEmail": "navis@ebi.ac.uk",
     "about": "Cloud Portal application for running bioexcel notebook in Jupyter server instance",
     "version": "1.0",
