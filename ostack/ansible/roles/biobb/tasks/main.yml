@@ -1,20 +1,34 @@
+- name: Download Workflow code from repo URL - "{{ repo_url }}"
+  git: >
+      repo="{{ repo_url }}"
+      dest="{{ ansible_env.HOME }}/bioexcel"
+
+- name: Check env file exists "{{ ansible_env.HOME }}/bioexcel/conda_env/environment.yml"
+  stat:
+    path: '{{ ansible_env.HOME }}/bioexcel/conda_env/environment.yml'
+  register: env_file
+
+- debug:
+    msg: "env_file - {{ env_file.stat }} "
+
 - name: Update conda
   conda:
     name: conda
     state: latest
     executable: '{{ ansible_env.HOME }}/miniconda3/bin/conda'
 
-- name: Create a conda environment - biobb
+- name: Create a conda environment - "{{ conda_environment }}"
   conda:
     name: python
-    version: 3.6
-    environment: biobb
+    version: '{{ python_version  }}'
+    environment: "{{ conda_environment }}"
     state: present
     executable: '{{ ansible_env.HOME }}/miniconda3/bin/conda'
+  when: env_file.stat.exists == False  
 
-- name: Install biobb packages in the environment
+- name: Install biobb packages in the environment "{{ conda_environment  }}"
   conda:
-    environment: biobb
+    environment: "{{ conda_environment }}"
     name:
       - biobb_io=0.1.4
       - biobb_model=0.1.8
@@ -26,18 +40,31 @@
     channels:
       - conda-forge
       - bioconda
+  when: env_file.stat.exists == False 
 
-- name: Activate biobb environment
-  shell: bash -ilc 'conda activate biobb;conda install pocl;jupyter-nbextension enable nglview --py --sys-prefix'
-
-- name: Download bioexcel github
-  git: >
-      repo=https://github.com/bioexcel/biobb_workflows.git
-      dest="{{ ansible_env.HOME }}/bioexcel"
+- name: Install biobb packages in the environment "{{ conda_environment  }}"
+  shell: bash -ilc 'conda env create -f bioexcel/conda_env/environment.yml'
+  when: env_file.stat.exists
 
 - name: Add line to bash_profile to activate biobb environment
   lineinfile:
     path: '{{ ansible_env.HOME }}/.profile'
     state: present
-    line: 'conda activate biobb'
+    line: 'conda activate {{ conda_environment }}'
+
+- name: Install manually pocl
+  shell: bash -ilc 'conda install pocl'
+  when: package_install == ""
+
+- name: Enable jupyter-nbextension nglview
+  shell: bash -ilc 'jupyter-nbextension enable nglview --py --sys-prefix'
+  when: package_install == ""
+
+- name: Install manually some packages
+  shell: bash -ilc '{{ package_install }}'
+  when: package_install != ""
+
+- name: Execute post install commands
+  shell: bash -ilc '{{ post_install }}'
+  when: post_install != ""
 

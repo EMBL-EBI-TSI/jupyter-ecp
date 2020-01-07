@@ -1,0 +1,3 @@
+#!/bin/bash
+source {{ ansible_env.HOME }}/miniconda3/bin/activate && conda activate {{ conda_environment  }}
+jupyter-notebook --config={{ jupyter_config_filename }}

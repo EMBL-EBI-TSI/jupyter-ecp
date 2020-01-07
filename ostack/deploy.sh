@@ -52,6 +52,9 @@ export ANSIBLE_REMOTE_USER="${TF_VAR_remote_user:-ubuntu}"
 echo "export ANSIBLE_REMOTE_USER=${ANSIBLE_REMOTE_USER}"
 
 export JUPYTER_PASSWORD="${TF_VAR_jupyter_password:-jupytersecret}"
+export TF_VAR_conda_environment="${TF_VAR_conda_environment:-biobb}"
+export TF_VAR_python_version="${TF_VAR_python_version:-3.6}"
+export TF_VAR_repo_url="${TF_VAR_repo_url:-https://github.com/bioexcel/biobb_workflows.git}"
 
 export TF_VAR_name="${TF_VAR_name}"
 echo "export TF_VAR_name=${TF_VAR_name}"

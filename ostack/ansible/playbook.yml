@@ -20,6 +20,11 @@
   vars:
      jupyter_plaintext_password: "{{ lookup('env','JUPYTER_PASSWORD') }}"
      ansible_user: "{{lookup('env','ANSIBLE_REMOTE_USER')}}"
+     repo_url: "{{ lookup('env','TF_VAR_repo_url') }}"
+     conda_environment: "{{ lookup('env','TF_VAR_conda_environment') }}"
+     python_version: "{{ lookup('env','TF_VAR_python_version') }}"
+     package_install: "{{ lookup('env','TF_VAR_package_install') }}"
+     post_install: "{{ lookup('env','TF_VAR_post_install') }}"
   become: yes
   become_user: "{{lookup('env','ANSIBLE_REMOTE_USER')}}"
   roles:

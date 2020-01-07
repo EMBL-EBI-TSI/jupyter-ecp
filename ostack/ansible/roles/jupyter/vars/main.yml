@@ -13,5 +13,6 @@ jupyter_daemon_systemd_dir: '/usr/lib/systemd/system'
 jupyter_daemon_document_root: '{{ ansible_env.HOME }}/bioexcel'
 jupyter_daemon_systemd_filename: '{{ jupyter_daemon_systemd_dir }}/jupyter.service'
 jupyter_daemon_pidfile: '/run/jupyter.service.pid'
+jupyter_start_script_file: '{{ ansible_env.HOME }}/system_script/startJupyter.sh'
 
 

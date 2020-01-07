@@ -5,6 +5,12 @@
    state: directory
    mode: '0755'
 
+- name: Create system script directory
+  file:
+   path: '{{ ansible_env.HOME }}/system_script'
+   state: directory
+   mode: '0755'
+
 - name: Generate OpenSSL key and certificate
   shell: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout {{jupyter_keyfile}} -out {{jupyter_certfile}} -subj "/C=GB/ST=Cambridge/L=Cambridge/O=Global Security/OU=IT Department/CN=ebi.ac.uk/EA=cloud-portal@ebi.ac.uk"
 
@@ -42,19 +48,12 @@
     mode: 0644
     force: yes
 
-- name: Install Jupyter as a daemon
-  become_user: "{{ ansible_user }}"
-  when: jupyter_daemon_enable
-  block:
-    - name: Find Jupyter server binary
-      shell: bash -ilc 'which jupyter-notebook'
-      register: jupyter_server_which_output
-      changed_when: no
-
-- name: Initialize Jupyter server binary path
-  set_fact:
-     jupyter_daemon_executable: '{{ jupyter_server_which_output.stdout }}'
-  changed_when: no
+- name: Create Jupyter start script
+  template:
+     src: start_jupyter.sh.j2
+     dest: '{{ jupyter_start_script_file }}'
+     force: yes
+     mode: '0755'
 
 - name: Make sure systemd directory exists
   become: yes
