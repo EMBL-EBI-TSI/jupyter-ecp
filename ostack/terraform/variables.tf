@@ -33,17 +33,6 @@ variable "network_name" {
   description = "The name of the OpenStack network where to deploy the instance"
 }
 
-variable "jupyter_port" {
-  default     = "8443"
-  description = "The Port number of Jupyter server instance to access from browser."
-}
-
-
-variable "jupyter_password" {
-  default     = "jupytersecret"
-  description = "The password to access jupyter server"
-}
-
 
 #### SSH ####
 variable "public_key_path" {

@@ -26,15 +26,15 @@
    path: "{{jupyter_keyfile}}"
    mode: '0777'
   
-- name: Generate Jupyter password hash for password "{{ jupyter_plaintext_password }}"
+- name: Generate Random token for Jupyter login 
   become_user: "{{ ansible_user }}"
-  shell: bash -ilc 'python -c "from notebook.auth import passwd; print(passwd(\"{{ jupyter_plaintext_password }}\"));"'
-  register: jupyter_password_output
+  shell: bash -ilc 'python -c "import secrets; print(secrets.token_hex(16));"'
+  register: random_token_output
   changed_when: no
 
-- name: Remember Jupyter password hash
+- name: Remember Jupyter login token
   set_fact:
-   jupyter_password: '{{ jupyter_password_output.stdout }}'
+   jupyter_token: '{{ random_token_output.stdout }}'
   changed_when: no
 
 - name: Create Jupyter profile
@@ -69,6 +69,17 @@
      src: jupyter.service.j2
      dest: '{{ jupyter_daemon_systemd_filename }}'
      force: yes 
+
+- name: Put Jupyter token into Portal outputs endpoint
+  uri:
+    url: '{{ portal_base_url }}/deployment/{{ portal_reference }}/outputs'
+    method: PUT
+    body: '[{"outputName":"jupyter_server_url","generatedValue":"https://{{ ansible_host }}:{{ jupyter_port }}"},{"outputName":"jupyter_login_token","generatedValue":"{{ jupyter_token }}"}]'
+    body_format: json
+    status_code: 204
+    headers:
+      Deployment-Secret: '{{ portal_callback_secret }}'
+      Content-Type: "application/json;charset=UTF-8"
   
 - name: Enable Jupyter daemon
   become: yes

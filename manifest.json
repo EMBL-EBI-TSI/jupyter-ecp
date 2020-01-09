@@ -18,8 +18,6 @@
     ],
     "outputs": [
         "external_ip",
-		"ssh_command",
-        "jupyter_url",
-	    "jupyter_password"
+		"ssh_command"
     ]
 }

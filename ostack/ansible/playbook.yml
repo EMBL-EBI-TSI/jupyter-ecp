@@ -18,7 +18,9 @@
 - name: Setting up Conda & Jupyter environment
   hosts: instance_public_ip
   vars:
-     jupyter_plaintext_password: "{{ lookup('env','JUPYTER_PASSWORD') }}"
+     portal_reference: "{{ lookup('env','PORTAL_DEPLOYMENT_REFERENCE')}}"
+     portal_callback_secret: "{{ lookup('env','PORTAL_CALLBACK_SECRET')}}"
+     portal_base_url: "{{ lookup('env','PORTAL_BASE_URL')}}"
      ansible_user: "{{lookup('env','ANSIBLE_REMOTE_USER')}}"
      repo_url: "{{ lookup('env','TF_VAR_repo_url') }}"
      conda_environment: "{{ lookup('env','TF_VAR_conda_environment') }}"
