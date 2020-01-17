@@ -21,7 +21,6 @@ It uses the ubuntu 18.04-python image from openstack and installs conda, jupyter
 | `ssh_key`               | `users's pub key`     |
 | `public_key_path`       | `~/.ssh/id_rsa.pub`   |
 | `private_key_path`      | `~/.ssh/id_rsa`       |
-| `jupyter_password`      | `jupytersecret`       |
 
 ### `Inputs`
 
