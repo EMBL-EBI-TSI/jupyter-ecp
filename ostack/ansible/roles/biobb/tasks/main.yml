@@ -3,9 +3,9 @@
       repo="{{ repo_url }}"
       dest="{{ ansible_env.HOME }}/bioexcel"
 
-- name: Check env file exists "{{ ansible_env.HOME }}/bioexcel/conda_env/environment.yml"
+- name: Check env file exists "{{ ansible_env.HOME }}/bioexcel/{{ conda_environment_file_path }}"
   stat:
-    path: '{{ ansible_env.HOME }}/bioexcel/conda_env/environment.yml'
+    path: '{{ ansible_env.HOME }}/bioexcel/{{ conda_environment_file_path }}'
   register: env_file
 
 - debug:
@@ -42,8 +42,8 @@
       - bioconda
   when: env_file.stat.exists == False 
 
-- name: Install biobb packages in the environment "{{ conda_environment  }}"
-  shell: bash -ilc 'conda env create -f bioexcel/conda_env/environment.yml'
+- name: Create conda env & Install packages from env file - "{{ conda_environment_file_path  }}"
+  shell: bash -ilc 'conda env create -f bioexcel/{{ conda_environment_file_path }}'
   when: env_file.stat.exists
 
 - name: Add line to bash_profile to activate biobb environment
