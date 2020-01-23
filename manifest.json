@@ -14,7 +14,13 @@
     ],
     "deploymentParameters": [
         "floating_ip_pool",
-        "network_name"
+        "network_name",
+        "repo_url",
+        "conda_environment",
+        "conda_environment_file_path",
+        "python_version",
+        "package_install",
+        "post_install"
     ],
     "outputs": [
         "external_ip",
