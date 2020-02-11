@@ -13,23 +13,18 @@ It uses the ubuntu 18.04-python image from openstack and installs conda, jupyter
 
 ### `Deployment parameters`
 
-| Parameter name               | Parameter value         | Description                            |
-| ---                          | ---                     | --------                               |
-| `remote_user`                | `ubuntu`                |                                        | 
-| `machine_type`               | `s1.small`              |                                        |
-| `floating_ip_pool`           | `ext-net-37`            |                                        |
-| `ssh_key`                    | `users's pub key`       |                                        |
-| `public_key_path`            | `~/.ssh/id_rsa.pub`     |                                        |
-| `private_key_path`           | `~/.ssh/id_rsa`         |                                        |
-| `repo_url`                   | `https://github.com/`   |                                        |
-| `conda_environment`          | `biobb_tutorial`        | Conda Environment name                 |
-| `conda_environment_file_path`| `/path/to/env_file`     | Conda environment file path            |               
-|                              |                         | on the repo                            |
-| `python_version`             | `3.6`                   | Python version used by conda           |               
-| `package_install`            | `conda install package` | Specify install commands with          |
-|                              |                         | Semicolon (;).                         |
-| `post_install`               | `enable some_service`   | Specify some commands to execute       |
-|                              |                         | post installation with  Semicolon (;)  |
+| Parameter name               | Default value |Example value                           | Description |
+| ---                          | ---       | --------                               |---|
+| `remote_user`                | `ubuntu`  |                                        | |
+| `machine_type`               | `s1.small`|                                        | Flavour of the instance |
+| `floating_ip_pool`           | `ext-net` |                                        | Preexisting Floating IP pool |
+| `network_name`               |           | `PROJECT-network`                      | Preexisting network to which an instance will be attached |
+| `repo_url`                   |           | `https://github.com/bioexcel/biobb_wf_md_setup` | URL of Github repository containing the notebook |
+| `conda_environment`          |           | `biobb_MDsetup_tutorial`               | Conda Environment name |
+| `conda_environment_file_path`|           | `conda_env/environment.yml`            | Conda environment file path relative to the repository root |          
+| `python_version`             |           | `3.6`                                  | Python version for Conda Environment |    | `package_install`            | Arbitrary list of packages, when environment path not specified plus `pocl`, when `package_install` not specified| `conda install pocl;conda install -y -c bioconda biobb_analysis==2.0.1` | Specify additional install commands, separated with a semicolon (;). |
+| `post_install`               | Arbitrary `jupyter-nbextension` command, when `package_install` not specified | `jupyter-nbextension enable --py --user widgetsnbextension;jupyter-nbextension enable --py --user nglview` | Specify some additional commands to execute after activating environment |
+
 
 ### `Inputs`
 
