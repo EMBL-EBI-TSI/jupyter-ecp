@@ -3,7 +3,7 @@ c.NotebookApp.ip = '{{ jupyter_ip }}'
 c.NotebookApp.port = {{ jupyter_port }}
 c.NotebookApp.token = '{{ jupyter_token }}'
 c.NotebookApp.tornado_settings = { 'headers': {
-        'Content-Security-Policy':  "default-src https: 'unsafe-inline'; connect-src https: wss:"
+        'Content-Security-Policy':  "default-src https: 'unsafe-inline' 'unsafe-eval'; connect-src https: wss:"
     }
 }
 c.NotebookApp.certfile = '{{ jupyter_certfile }}'
