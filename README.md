@@ -8,7 +8,7 @@ It uses the ubuntu 18.04-python image from openstack and installs conda, jupyter
 
 
 ## Instructions
-Import project to ECP, enter inpits if required and deploy.
+Import project to ECP, enter inputs if required and deploy.
 
 ## Default values
 
