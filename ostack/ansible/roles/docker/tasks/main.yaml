@@ -1,0 +1,18 @@
+---
+# Install docker-ce
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+ 
+- name: Update apt and install docker-ce
+  apt: update_cache=yes name=docker-ce state=latest
+
+# Add ssh user to docker group
+- name: Adding remotr user "{{lookup('env','ANSIBLE_REMOTE_USER')}}" to docker group
+  raw: usermod -aG docker "{{lookup('env','ANSIBLE_REMOTE_USER')}}"

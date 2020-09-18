@@ -14,7 +14,16 @@
           raw: echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections
         - name: Try to install python 2, when ansible is not able to connect
           raw: test -e /usr/bin/python || (apt -y update && apt install -y python)
-      become: yes  
+      become: yes
+
+- name: Install docker
+  gather_facts: no
+  hosts: instance_public_ip
+  vars:
+    docker_install: "{{ lookup('env','TF_VAR_docker_install') }}"
+  become: yes
+  roles:
+    -  { role: docker, when: docker_install == "yes" }
 
 - name: Setting up Conda & Jupyter environment
   hosts: instance_public_ip

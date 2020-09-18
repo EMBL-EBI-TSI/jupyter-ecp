@@ -20,7 +20,8 @@
         "conda_environment_file_path",
         "python_version",
         "package_install",
-        "post_install"
+        "post_install",
+        "docker_install"
     ],
     "outputs": [
         "external_ip",

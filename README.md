@@ -26,6 +26,7 @@ Import project to ECP, enter inputs if required and deploy.
 |`python_version`              | `3.6`                                   | Python version for Conda Environment | 
 |`package_install`             | `conda install pocl; conda install -y -c bioconda biobb_analysis==2.0.1` | Specify additional install commands, separated with a semicolon (;). Arbitrary list of packages will be installed, when environment path not specified plus `pocl`, when `package_install` not specified |
 |`post_install`                | `jupyter-nbextension enable --py --user widgetsnbextension; jupyter-nbextension enable --py --user nglview` | Specify some additional commands to execute after activating environment. Arbitrary `jupyter-nbextension` command executed, when `package_install` not specified |
+|`docker_install`              | `yes` or `no`                           | the flag to set whether docker needs to be installed or not |
 
 
 ### `Inputs`

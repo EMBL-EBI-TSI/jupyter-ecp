@@ -56,6 +56,7 @@ export TF_VAR_conda_environment="${TF_VAR_conda_environment:-biobb}"
 export TF_VAR_conda_environment_file_path="${TF_VAR_conda_environment_file_path:-conda_env/environment.yml}"
 export TF_VAR_python_version="${TF_VAR_python_version:-3.6}"
 export TF_VAR_repo_url="${TF_VAR_repo_url:-https://github.com/bioexcel/biobb_workflows.git}"
+export TF_VAR_docker_install="${TF_VAR_docker_install:-no}"
 
 export TF_VAR_name="${TF_VAR_name}"
 echo "export TF_VAR_name=${TF_VAR_name}"
