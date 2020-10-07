@@ -36,6 +36,10 @@
   set_fact:
    jupyter_token: '{{ random_token_output.stdout }}'
   changed_when: no
+  
+- name:  Install Jupyter notebook
+  become_user: "{{ ansible_user }}"
+  shell: bash -ilc 'conda install notebook'
 
 - name: Create Jupyter profile
   become_user: "{{ ansible_user }}"
