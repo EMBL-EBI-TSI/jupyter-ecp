@@ -1,14 +1,14 @@
 ---
 - name: Warming up jupyter instance
   gather_facts: no
-  hosts: instance_public_ip
+  hosts: "{{ ecp_host | default('instance_public_ip') }}"
   tasks:
     - name: Initial connection block
       block:
-        - name: Wait 30 seconds, but only start checking after 5 seconds
+        - name: Wait 120 seconds, but only start checking after 5 seconds
           wait_for_connection:
             delay: 5
-            timeout: 30
+            timeout: 120
       rescue:
         - name: Disabling prompt for restarting while installing packages
           raw: echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections
@@ -18,7 +18,7 @@
 
 - name: Install docker
   gather_facts: no
-  hosts: instance_public_ip
+  hosts: "{{ ecp_host | default('instance_public_ip') }}"
   vars:
     docker_install: "{{ lookup('env','TF_VAR_docker_install') }}"
   become: yes
@@ -26,7 +26,7 @@
     -  { role: docker, when: docker_install == "yes" }
 
 - name: Setting up Conda & Jupyter environment
-  hosts: instance_public_ip
+  hosts: "{{ ecp_host | default('instance_public_ip') }}"
   vars:
      portal_reference: "{{ lookup('env','PORTAL_DEPLOYMENT_REFERENCE')}}"
      portal_callback_secret: "{{ lookup('env','PORTAL_CALLBACK_SECRET')}}"

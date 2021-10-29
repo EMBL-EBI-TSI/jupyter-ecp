@@ -34,7 +34,8 @@ echo "export TF_STATE=${TF_STATE}"
 
 # Launch provisioning of the VM
 echo -e "\n\t${CYAN}Terraform apply${NC}\n"
-terraform apply --state=${DPL}'terraform.tfstate' ${APP}'/ostack/terraform'
+terraform -chdir=${APP}'/ostack/terraform' init
+terraform -chdir=${APP}'/ostack/terraform' apply -auto-approve --state=${DPL}'terraform.tfstate'
 
 # Extract the external IP of the instance
 external_ip=$(terraform output -state=${DPL}'terraform.tfstate' external_ip)
@@ -47,6 +48,13 @@ cd ostack/ansible
 
 echo "Installing requirements!"
 ansible-galaxy install -r requirements.yml 
+
+# Used by terraform.py - env var holds directory containing terraform.tfstate file
+export TERRAFORM_STATE_ROOT=${DPL}
+echo "export TERRAFORM_STATE_ROOT=${DPL}"
+# Used by ansible-playbook - local var holds host name (e.g. tsi1629995083720-1)
+terraform_default_host="${TF_VAR_name}-1"
+echo "Script var terraform_default_host=\"${TF_VAR_name}-1\""
 
 export ANSIBLE_REMOTE_USER="${TF_VAR_remote_user:-ubuntu}"
 echo "export ANSIBLE_REMOTE_USER=${ANSIBLE_REMOTE_USER}"
@@ -63,4 +71,4 @@ echo "export TF_VAR_name=${TF_VAR_name}"
 
 # Launch Ansible playbook
 echo -e "\n\t${CYAN}Launch Ansible playbook${NC}\n"
-ansible-playbook -b playbook.yml -e 'ansible_python_interpreter=/usr/bin/python3' -e 'host_key_checking=False'
+ansible-playbook -b playbook.yml --extra-vars "ecp_host=${terraform_default_host}"
