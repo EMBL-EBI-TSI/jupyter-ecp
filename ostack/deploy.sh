@@ -71,4 +71,4 @@ echo "export TF_VAR_name=${TF_VAR_name}"
 
 # Launch Ansible playbook
 echo -e "\n\t${CYAN}Launch Ansible playbook${NC}\n"
-ansible-playbook -b playbook.yml --extra-vars "ecp_host=${terraform_default_host}"
+ansible-playbook -b playbook.yml -e 'ansible_python_interpreter=/usr/bin/python3' -e 'host_key_checking=False' --extra-vars "ecp_host=${terraform_default_host}"
