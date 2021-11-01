@@ -26,7 +26,7 @@ variable "machine_type" {
 }
 
 variable "instance_volume_size" {
-  default     = "20"
+  default     = "40"
   description = "Instance volume size."
 }
 
