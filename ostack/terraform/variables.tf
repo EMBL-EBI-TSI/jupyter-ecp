@@ -21,7 +21,7 @@ variable "disk_image_name" {
 }
 
 variable "machine_type" {
-  default     = "1c2m20d"
+  default     = "2c8m40d"
   description = "Machine type (flavor)"
 }
 
