@@ -53,7 +53,7 @@
     line: 'conda activate {{ conda_environment }}'
 
 - name: Install manually pocl
-  shell: bash -ilc 'conda install pocl'
+  shell: bash -ilc 'conda install -y pocl'
   when: package_install == ""
 
 - name: Enable jupyter-nbextension nglview
